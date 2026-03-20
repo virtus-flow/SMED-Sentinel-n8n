@@ -426,7 +426,7 @@
     },
     {
       "parameters": {
-        "chatId": "=887715950",
+        "chatId": "=",
         "text": "=🚨 VIRTUS SENTINEL АЛАРМ! 🏭 Линија: {{ $('Edit Fields').item.json.line_id }} 👤 Оператер: {{ $('Edit Fields').item.json.operator_id }} ⚠️ УПОЗОРЕЊЕ: SMED лимит пробијен! Машина стоји преко 30 минута.",
         "additionalFields": {}
       },
