@@ -7,7 +7,7 @@
 
 ### Кључне функције:
 - **Asynchronous Tracking:** Webhook-базиран старт/стоп систем.
-- **Smart Watchdog:** Аутоматски тајмер од 20 минута са детекцијом кашњења.
+- **Smart Watchdog:** Аутоматски тајмер од 30 минута са детекцијом кашњења.
 - **Automated Analytics:** Математички прорачун трајања у минутима.
 
 ---
@@ -19,5 +19,5 @@ durations and escalating delays via Telegram alerts.
 
 ### Key Features:
 - **Asynchronous Tracking:** Webhook-based start/stop logic.
-- **Smart Watchdog:** 20-minute automated timer with delay detection.
+- **Smart Watchdog:** 30-minute automated timer with delay detection.
 - **Automated Analytics:** Precise duration calculation (End - Start).
