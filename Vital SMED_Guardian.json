@@ -1,0 +1,606 @@
+{
+  "name": "Vital SMED_Guardian",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "2342df71-e74a-4463-813b-6d89c67a8484",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        -128
+      ],
+      "id": "0e44ecbc-adf6-48a8-bfa3-3d04dd6dcbcb",
+      "name": "Signal Trigger",
+      "webhookId": "2342df71-e74a-4463-813b-6d89c67a8484"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "2fbf956c-60d2-49c5-9144-286eb3f824bd",
+              "name": "start_time",
+              "value": "={{ $json.body.timestamp }}",
+              "type": "string"
+            },
+            {
+              "id": "298b0277-a2db-4b5d-852b-a3247b7abe8f",
+              "name": "expected_duration",
+              "value": 30,
+              "type": "number"
+            },
+            {
+              "id": "7ea24507-fe67-4316-a876-6f1599fdc155",
+              "name": "line_id",
+              "value": "={{ $json.body.line_id }}",
+              "type": "string"
+            },
+            {
+              "id": "b4cad93b-f209-4e35-8cdc-913da738fac4",
+              "name": "operator_id",
+              "value": "={{ $json.body.operator_id }}",
+              "type": "string"
+            },
+            {
+              "id": "1e2c4c50-422c-463a-b3d4-bab8191f88eb",
+              "name": "Status",
+              "value": "IN_PROGRESS",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        -128
+      ],
+      "id": "85a255e8-8b46-4fc7-b047-c9b4e85065f3",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "c5cdbc9a-3785-4abc-ac57-43a720015143",
+              "leftValue": "={{ $('Signal Trigger').item.json.body.action }}",
+              "rightValue": "=SMED_START",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        -128
+      ],
+      "id": "62747cd7-8ef7-4c23-8542-f2636fe77b17",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "efxV3JyHj5xfzXLf",
+          "mode": "list",
+          "cachedResultName": "Industrial Data",
+          "cachedResultUrl": "/projects/SBtDyqA5Lg3ZT9Cn/datatables/efxV3JyHj5xfzXLf"
+        },
+        "matchType": "allConditions",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "line_id",
+              "keyValue": "={{ $('Edit Fields').item.json.line_id }}"
+            },
+            {
+              "keyName": "operator_id",
+              "keyValue": "={{ $('Edit Fields').item.json.operator_id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "status": "=COMPLETED",
+            "end_time": "={{ $('Signal Trigger').item.json.body.timestamp }}",
+            "Duration": "={{ $json.Minutes_passed }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "line_id",
+              "displayName": "line_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "operator_id",
+              "displayName": "operator_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "start_time",
+              "displayName": "start_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "end_time",
+              "displayName": "end_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Duration",
+              "displayName": "Duration",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        -32
+      ],
+      "id": "9dd7d960-ed6e-4381-b731-a734ed6baa50",
+      "name": "SMED_Sentinel_Logs"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "efxV3JyHj5xfzXLf",
+          "mode": "list",
+          "cachedResultName": "Industrial Data",
+          "cachedResultUrl": "/projects/SBtDyqA5Lg3ZT9Cn/datatables/efxV3JyHj5xfzXLf"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "line_id": "={{ $('Edit Fields').item.json.line_id }}",
+            "operator_id": "={{ $('Edit Fields').item.json.operator_id }}",
+            "start_time": "={{ $('Edit Fields').item.json.start_time }}",
+            "status": "={{ $('Edit Fields').item.json.Status }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "line_id",
+              "displayName": "line_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "operator_id",
+              "displayName": "operator_id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "start_time",
+              "displayName": "start_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "end_time",
+              "displayName": "end_time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        -224
+      ],
+      "id": "c04199ee-60a5-45ce-96e5-3392c02a3633",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "efxV3JyHj5xfzXLf",
+          "mode": "list",
+          "cachedResultName": "Industrial Data",
+          "cachedResultUrl": "/projects/SBtDyqA5Lg3ZT9Cn/datatables/efxV3JyHj5xfzXLf"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "line_id",
+              "keyValue": "={{ $json.line_id }}"
+            },
+            {
+              "keyName": "status",
+              "keyValue": "={{ $json.status }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        1120,
+        -224
+      ],
+      "id": "11f0f7c8-6b49-4800-9196-df6ca8f2e721",
+      "name": "Get row(s)"
+    },
+    {
+      "parameters": {
+        "amount": 30,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        896,
+        -224
+      ],
+      "id": "9aa7509f-33d8-476f-92bf-18de4cd6798d",
+      "name": "Wait",
+      "webhookId": "5e42e8b2-6fcc-4437-ba3d-3f97fe4d2003"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d5fedc0e-d0d3-41c5-a569-cef40f1d0f42",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "IN_PROGRESS",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1344,
+        -224
+      ],
+      "id": "f01409a4-1a88-4627-9259-500b2c0be4d1",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "efxV3JyHj5xfzXLf",
+          "mode": "list",
+          "cachedResultName": "Industrial Data",
+          "cachedResultUrl": "/projects/SBtDyqA5Lg3ZT9Cn/datatables/efxV3JyHj5xfzXLf"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "line_id",
+              "keyValue": "={{ $json.line_id }}"
+            },
+            {
+              "keyName": "status",
+              "keyValue": "=IN_PROGRESS"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        -32
+      ],
+      "id": "73ff61cc-695c-4f6f-b4f0-b746e551e95f",
+      "name": "Get row(s)1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d88fc732-a725-4b0d-91cc-faad29d5b944",
+              "name": "=Minutes_passed",
+              "value": "={{ Number(DateTime.fromISO($('Signal Trigger').item.json.body.timestamp).diff(DateTime.fromISO($json.start_time), 'minutes').minutes.toFixed(2)) }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        -32
+      ],
+      "id": "5fe1f5c3-4cf4-4cc6-a849-d5a691ecf965",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "chatId": "=887715950",
+        "text": "=🚨 VIRTUS SENTINEL АЛАРМ! 🏭 Линија: {{ $('Edit Fields').item.json.line_id }} 👤 Оператер: {{ $('Edit Fields').item.json.operator_id }} ⚠️ УПОЗОРЕЊЕ: SMED лимит пробијен! Машина стоји преко 30 минута.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1536,
+        -336
+      ],
+      "id": "bfb016fe-9dba-4f42-9eec-0966a41e357e",
+      "name": "Send a text message",
+      "webhookId": "cc05291c-5012-4546-bcdb-d5cfe1a79354",
+      "credentials": {
+        "telegramApi": {
+          "id": "gSI9aTsw79CGm7HZ",
+          "name": "Telegram account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Signal Trigger": [
+      {
+        "json": {
+          "headers": {
+            "host": "localhost:5678",
+            "user-agent": "curl/8.5.0",
+            "accept": "*/*",
+            "content-type": "application/json",
+            "content-length": "162"
+          },
+          "params": {},
+          "query": {},
+          "body": {
+            "line_id": "LINE-VIRTUS-01",
+            "operator_id": "RAKETA-001",
+            "action": "SMED_START",
+            "tooling_id": "MOLD-ALPHA-99",
+            "timestamp": "2026-03-20T13:59:29Z"
+          },
+          "webhookUrl": "http://localhost:5678/webhook/2342df71-e74a-4463-813b-6d89c67a8484",
+          "executionMode": "production"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Signal Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get row(s)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SMED_Sentinel_Logs": {
+      "main": [
+        []
+      ]
+    },
+    "Insert row": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Get row(s)1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "SMED_Sentinel_Logs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "c03715b4-aa90-4d31-9d62-24f72f63c91b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "641466bcd078904d878daad904c889b791adbd559bef687e56c27bd3f8259a82"
+  },
+  "id": "u9lq7TctLdTO1opd",
+  "tags": []
+}
